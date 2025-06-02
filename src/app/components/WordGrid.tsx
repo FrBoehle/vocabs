@@ -2,6 +2,7 @@ import React, { ChangeEvent } from "react";
 import { Box, Button, IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { UploadFile, Delete, Edit } from "@mui/icons-material";
+import { captions } from "../resources/captions.res";
 
 export interface RowData {
   id: number;
@@ -20,7 +21,7 @@ export interface RowData {
 
 interface WordGridProps {
   rows: RowData[];
-  onDelete: (id: number) => void;
+  onDelete: (row: RowData) => void;
   onAudioUpload: (id: number, file: File | null) => void;
   onEdit: (row: RowData) => void;
   onAdd: () => void;
@@ -34,19 +35,24 @@ export const WordGrid: React.FC<WordGridProps> = ({
   onAdd,
 }) => {
   const columns: GridColDef[] = [
-    { field: "deutsch", headerName: "Deutsch", flex: 1, minWidth: 100 },
-    { field: "infinitiv", headerName: "Infinitiv", flex: 1, minWidth: 100 },
-    { field: "ich", headerName: "Ich", flex: 1, minWidth: 80 },
-    { field: "duM", headerName: "Du (M)", flex: 1, minWidth: 80 },
-    { field: "duW", headerName: "Du (W)", flex: 1, minWidth: 80 },
-    { field: "er", headerName: "Er", flex: 1, minWidth: 80 },
-    { field: "sie", headerName: "Sie", flex: 1, minWidth: 80 },
-    { field: "wir", headerName: "Wir", flex: 1, minWidth: 80 },
-    { field: "ihr", headerName: "Ihr", flex: 1, minWidth: 80 },
-    { field: "siePlr", headerName: "Sie (Plural)", flex: 1, minWidth: 80 },
+    { field: "deutsch", headerName: captions.deutsch, flex: 1, minWidth: 100 },
+    {
+      field: "infinitiv",
+      headerName: captions.infinitiv,
+      flex: 1,
+      minWidth: 100,
+    },
+    { field: "ich", headerName: captions.ich, flex: 1, minWidth: 80 },
+    { field: "duM", headerName: captions.duM, flex: 1, minWidth: 80 },
+    { field: "duW", headerName: captions.duW, flex: 1, minWidth: 80 },
+    { field: "er", headerName: captions.er, flex: 1, minWidth: 80 },
+    { field: "sie", headerName: captions.sie, flex: 1, minWidth: 80 },
+    { field: "wir", headerName: captions.wir, flex: 1, minWidth: 80 },
+    { field: "ihr", headerName: captions.ihr, flex: 1, minWidth: 80 },
+    { field: "siePlr", headerName: captions.siePlr, flex: 1, minWidth: 80 },
     {
       field: "audio",
-      headerName: "Audiosample",
+      headerName: captions.audioSample,
       flex: 1,
       minWidth: 120,
       renderCell: (params: GridRenderCellParams<RowData>) =>
@@ -99,7 +105,7 @@ export const WordGrid: React.FC<WordGridProps> = ({
     },
     {
       field: "actions",
-      headerName: "Aktionen",
+      headerName: captions.actions,
       minWidth: 100,
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
@@ -110,7 +116,10 @@ export const WordGrid: React.FC<WordGridProps> = ({
           >
             <Edit fontSize="small" />
           </IconButton>
-          <IconButton size="small" onClick={() => onDelete(params.row.id)}>
+          <IconButton
+            size="small"
+            onClick={() => onDelete(params.row as RowData)}
+          >
             <Delete fontSize="small" />
           </IconButton>
         </>
@@ -132,7 +141,7 @@ export const WordGrid: React.FC<WordGridProps> = ({
         sx={{ mt: 2 }}
         onClick={onAdd}
       >
-        + Neues Wort hinzufügen
+        {captions.addWord}
       </Button>
     </Box>
   );

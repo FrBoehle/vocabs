@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { RowData } from "../WordGrid";
 import { FormFields } from "./FormFields";
+import { captions } from "@/app/resources/captions.res";
+import { messages } from "@/app/resources/messages.res";
 
 interface AddRowDialogProps {
   open: boolean;
@@ -38,14 +40,14 @@ export const AddRowDialog: React.FC<AddRowDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Neue Zeile hinzufügen</DialogTitle>
+      <DialogTitle>{messages.addRowTitle}</DialogTitle>
       <DialogContent>
         <FormFields row={localRow} onChange={handleFieldChange} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Abbrechen</Button>
+        <Button onClick={onClose}>{messages.cancel}</Button>
         <Button onClick={handleAdd} variant="contained">
-          Hinzufügen
+          {messages.add}
         </Button>
       </DialogActions>
     </Dialog>

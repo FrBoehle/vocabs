@@ -2,21 +2,19 @@ import React from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 import { RowData } from "../WordGrid";
+import { captions } from "@/app/resources/captions.res";
 
 interface FormFieldsProps {
   row: RowData;
   onChange: (changed: Partial<RowData>) => void;
 }
 
-export const FormFields: React.FC<FormFieldsProps> = ({
-  row,
-  onChange,
-}) => (
+export const FormFields: React.FC<FormFieldsProps> = ({ row, onChange }) => (
   <Box display="flex" flexDirection="column" gap={2} mt={1}>
     {/* Zeile 1 */}
     <Box display="flex" gap={2}>
       <TextField
-        label="Deutsch"
+        label={captions.deutsch}
         value={row.deutsch}
         onChange={(e) => onChange({ deutsch: e.target.value })}
         size="small"
@@ -33,35 +31,35 @@ export const FormFields: React.FC<FormFieldsProps> = ({
     {/* Zeile 2 */}
     <Box display="flex" gap={2}>
       <TextField
-        label="Ich"
+        label={captions.ich}
         value={row.ich}
         onChange={(e) => onChange({ ich: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Du (Männlich)"
+        label={captions.duM}
         value={row.duM}
         onChange={(e) => onChange({ duM: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Du (Weiblich)"
+        label={captions.duW}
         value={row.duW}
         onChange={(e) => onChange({ duW: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Er"
+        label={captions.er}
         value={row.er}
         onChange={(e) => onChange({ er: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Sie"
+        label={captions.sie}
         value={row.sie}
         onChange={(e) => onChange({ sie: e.target.value })}
         size="small"
@@ -71,26 +69,27 @@ export const FormFields: React.FC<FormFieldsProps> = ({
     {/* Zeile 3 */}
     <Box display="flex" gap={2}>
       <TextField
-        label="Wir"
+        label={captions.wir}
         value={row.wir}
         onChange={(e) => onChange({ wir: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Ihr"
+        label={captions.ihr}
         value={row.ihr}
         onChange={(e) => onChange({ ihr: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
-        label="Sie (Plural)"
+        label={captions.siePlr}
         value={row.siePlr}
         onChange={(e) => onChange({ siePlr: e.target.value })}
         size="small"
         fullWidth
       />
+      {/* Zeile 4 */}
       <Box display="flex" alignItems="center">
         <input
           accept="audio/*"
@@ -98,9 +97,7 @@ export const FormFields: React.FC<FormFieldsProps> = ({
           onChange={(e) =>
             onChange({
               audio:
-                e.target.files && e.target.files[0]
-                  ? e.target.files[0]
-                  : null,
+                e.target.files && e.target.files[0] ? e.target.files[0] : null,
             })
           }
           style={{ display: "none" }}
@@ -108,7 +105,7 @@ export const FormFields: React.FC<FormFieldsProps> = ({
         />
         <label htmlFor="audio-upload-dialog">
           <Button component="span" startIcon={<UploadFile />} size="small">
-            Audio hochladen
+            {captions.audioUpload}
           </Button>
         </label>
         {row.audio && (

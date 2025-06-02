@@ -13,6 +13,7 @@ import { WordGrid, RowData } from "./components/WordGrid";
 import { exampleData } from "./data/initialsRows";
 import { AddRowDialog } from "./components/dialogs/AddRowDialog";
 import { EditRowDialog } from "./components/dialogs/EditRowDialog";
+import { DeleteConfirmDialog } from "./components/dialogs/DeleteConfirmDialog";
 
 const darkTheme = createTheme({
   palette: {
@@ -43,13 +44,29 @@ function App() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState<RowData | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState<RowData | null>(null);
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
   };
 
-  const handleDeleteRow = (id: number) => {
-    setRows(rows.filter((row) => row.id !== id));
+  const handleDeleteClick = (row: RowData) => {
+    setRowToDelete(row);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (rowToDelete) {
+      setRows((rows) => rows.filter((r) => r.id !== rowToDelete.id));
+      setRowToDelete(null);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setRowToDelete(null);
+    setDeleteDialogOpen(false);
   };
 
   const handleEditRow = (row: RowData) => {
@@ -84,7 +101,7 @@ function App() {
 
             <WordGrid
               rows={rows}
-              onDelete={handleDeleteRow}
+              onDelete={handleDeleteClick}
               onAudioUpload={handleAudioUpload}
               onEdit={handleEditRow}
               onAdd={handleAddRow}
@@ -106,6 +123,12 @@ function App() {
                 setEditDialogOpen(false);
                 setEditRow(null);
               }}
+            />
+            <DeleteConfirmDialog
+              open={deleteDialogOpen}
+              message="Möchtest du diese Zeile wirklich löschen?"
+              onCancel={handleDeleteCancel}
+              onConfirm={handleDeleteConfirm}
             />
           </>
         )}
