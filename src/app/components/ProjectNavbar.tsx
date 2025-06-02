@@ -1,5 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Tabs, Tab } from "@mui/material";
+import { captions } from "../resources/captions.res";
 
 interface ProjectNavbarProps {
   projectName: string;
@@ -25,10 +26,10 @@ export const ProjectNavbar: React.FC<ProjectNavbarProps> = ({
       indicatorColor="secondary"
       textColor="inherit"
     >
-      <Tab label="Verben" />
-      <Tab label="Nomen" />
-      <Tab label="Adjektive" />
-      <Tab label="Phrasen" />
+      <Tab label={captions.verbs} />
+      <Tab label={captions.nouns} />
+      <Tab label={captions.adjectives} />
+      <Tab label={captions.phrases} />
     </Tabs>
   </AppBar>
 );

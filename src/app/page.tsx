@@ -14,6 +14,7 @@ import { exampleData } from "./data/initialsRows";
 import { AddRowDialog } from "./components/dialogs/AddRowDialog";
 import { EditRowDialog } from "./components/dialogs/EditRowDialog";
 import { DeleteConfirmDialog } from "./components/dialogs/DeleteConfirmDialog";
+import { captions } from "./resources/captions.res";
 
 const darkTheme = createTheme({
   palette: {
@@ -96,7 +97,7 @@ function App() {
         {tabIndex === 0 && (
           <>
             <Typography variant="h4" gutterBottom>
-              Verben
+              {captions.verbs}
             </Typography>
 
             <WordGrid
