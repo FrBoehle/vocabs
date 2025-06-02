@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
   CssBaseline,
   createTheme,
   ThemeProvider,
@@ -13,8 +11,8 @@ import {
 import { ProjectNavbar } from "./components/ProjectNavbar";
 import { WordGrid, RowData } from "./components/WordGrid";
 import { exampleData } from "./data/initialsRows";
-import { AddRowDialog } from "./components/AddRowDialog";
-import { EditRowDialog } from "./components/EditRowDialog";
+import { AddRowDialog } from "./components/dialogs/AddRowDialog";
+import { EditRowDialog } from "./components/dialogs/EditRowDialog";
 
 const darkTheme = createTheme({
   palette: {
