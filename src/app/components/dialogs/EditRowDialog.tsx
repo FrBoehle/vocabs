@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,34 +7,49 @@ import {
   Button,
 } from "@mui/material";
 import { RowData } from "../WordGrid";
-import { WordFormFields } from "./FormFields";
+import { FormFields } from "./FormFields";
 
 interface EditRowDialogProps {
   open: boolean;
   row: RowData | null;
-  onChange: (row: RowData) => void;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (row: RowData) => void;
 }
 
 export const EditRowDialog: React.FC<EditRowDialogProps> = ({
   open,
   row,
-  onChange,
   onClose,
   onSave,
 }) => {
-  if (!row) return null;
+  const [localRow, setLocalRow] = useState<RowData | null>(row);
+
+  useEffect(() => {
+    if (open && row) setLocalRow(row);
+    if (!open) setLocalRow(null);
+  }, [open, row]);
+
+  const handleFieldChange = (changed: Partial<RowData>) => {
+    setLocalRow((prev) => (prev ? { ...prev, ...changed } : prev));
+  };
+
+  const handleSave = () => {
+    if (localRow) {
+      onSave(localRow);
+    }
+  };
+
+  if (!localRow) return null;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Zeile bearbeiten</DialogTitle>
       <DialogContent>
-        <WordFormFields row={row} onChange={onChange} />
+        <FormFields row={localRow} onChange={handleFieldChange} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Abbrechen</Button>
-        <Button onClick={onSave} variant="contained">
+        <Button onClick={handleSave} variant="contained">
           Speichern
         </Button>
       </DialogActions>

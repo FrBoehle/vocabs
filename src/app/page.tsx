@@ -41,7 +41,6 @@ function App() {
   const [tabIndex, setTabIndex] = useState(0);
   const [projectName, setProjectName] = useState("Assyrisch lernen");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [newRow, setNewRow] = useState<RowData>(defaultRow);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState<RowData | null>(null);
 
@@ -58,25 +57,13 @@ function App() {
     setEditDialogOpen(true);
   };
 
-  const handleEditRowConfirm = () => {
-    if (editRow) {
-      setRows(rows.map((r) => (r.id === editRow.id ? editRow : r)));
-      setEditDialogOpen(false);
-      setEditRow(null);
-    }
-  };
-
   const handleAddRow = () => setAddDialogOpen(true);
 
-  const handleAddRowConfirm = () => {
-    setRows([
+  const handleAddRowConfirm = (row: RowData) => {
+    setRows((rows) => [
       ...rows,
-      {
-        ...newRow,
-        id: rows.length ? Math.max(...rows.map((r) => r.id)) + 1 : 1,
-      },
+      { ...row, id: rows.length ? Math.max(...rows.map((r) => r.id)) + 1 : 1 },
     ]);
-    setNewRow(defaultRow);
     setAddDialogOpen(false);
   };
 
@@ -104,17 +91,21 @@ function App() {
             />
             <AddRowDialog
               open={addDialogOpen}
-              row={newRow}
-              onChange={setNewRow}
+              defaultRow={defaultRow}
               onClose={() => setAddDialogOpen(false)}
               onAdd={handleAddRowConfirm}
             />
             <EditRowDialog
               open={editDialogOpen}
               row={editRow}
-              onChange={(row) => setEditRow(row)}
               onClose={() => setEditDialogOpen(false)}
-              onSave={handleEditRowConfirm}
+              onSave={(updatedRow: RowData) => {
+                setRows((rows) =>
+                  rows.map((r) => (r.id === updatedRow.id ? updatedRow : r))
+                );
+                setEditDialogOpen(false);
+                setEditRow(null);
+              }}
             />
           </>
         )}

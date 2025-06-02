@@ -3,12 +3,12 @@ import { Box, TextField, Button } from "@mui/material";
 import { UploadFile } from "@mui/icons-material";
 import { RowData } from "../WordGrid";
 
-interface WordFormFieldsProps {
+interface FormFieldsProps {
   row: RowData;
-  onChange: (row: RowData) => void;
+  onChange: (changed: Partial<RowData>) => void;
 }
 
-export const WordFormFields: React.FC<WordFormFieldsProps> = ({
+export const FormFields: React.FC<FormFieldsProps> = ({
   row,
   onChange,
 }) => (
@@ -18,14 +18,14 @@ export const WordFormFields: React.FC<WordFormFieldsProps> = ({
       <TextField
         label="Deutsch"
         value={row.deutsch}
-        onChange={(e) => onChange({ ...row, deutsch: e.target.value })}
+        onChange={(e) => onChange({ deutsch: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Infinitiv"
         value={row.infinitiv}
-        onChange={(e) => onChange({ ...row, infinitiv: e.target.value })}
+        onChange={(e) => onChange({ infinitiv: e.target.value })}
         size="small"
         fullWidth
       />
@@ -35,35 +35,35 @@ export const WordFormFields: React.FC<WordFormFieldsProps> = ({
       <TextField
         label="Ich"
         value={row.ich}
-        onChange={(e) => onChange({ ...row, ich: e.target.value })}
+        onChange={(e) => onChange({ ich: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Du (Männlich)"
         value={row.duM}
-        onChange={(e) => onChange({ ...row, duM: e.target.value })}
+        onChange={(e) => onChange({ duM: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Du (Weiblich)"
         value={row.duW}
-        onChange={(e) => onChange({ ...row, duW: e.target.value })}
+        onChange={(e) => onChange({ duW: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Er"
         value={row.er}
-        onChange={(e) => onChange({ ...row, er: e.target.value })}
+        onChange={(e) => onChange({ er: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Sie"
         value={row.sie}
-        onChange={(e) => onChange({ ...row, sie: e.target.value })}
+        onChange={(e) => onChange({ sie: e.target.value })}
         size="small"
         fullWidth
       />
@@ -73,21 +73,21 @@ export const WordFormFields: React.FC<WordFormFieldsProps> = ({
       <TextField
         label="Wir"
         value={row.wir}
-        onChange={(e) => onChange({ ...row, wir: e.target.value })}
+        onChange={(e) => onChange({ wir: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Ihr"
         value={row.ihr}
-        onChange={(e) => onChange({ ...row, ihr: e.target.value })}
+        onChange={(e) => onChange({ ihr: e.target.value })}
         size="small"
         fullWidth
       />
       <TextField
         label="Sie (Plural)"
         value={row.siePlr}
-        onChange={(e) => onChange({ ...row, siePlr: e.target.value })}
+        onChange={(e) => onChange({ siePlr: e.target.value })}
         size="small"
         fullWidth
       />
@@ -97,9 +97,10 @@ export const WordFormFields: React.FC<WordFormFieldsProps> = ({
           type="file"
           onChange={(e) =>
             onChange({
-              ...row,
               audio:
-                e.target.files && e.target.files[0] ? e.target.files[0] : null,
+                e.target.files && e.target.files[0]
+                  ? e.target.files[0]
+                  : null,
             })
           }
           style={{ display: "none" }}
