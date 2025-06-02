@@ -1,0 +1,47 @@
+import { RowData } from "../components/WordGrid";
+
+export const exampleData: RowData[] = [
+  {
+    id: 1,
+    deutsch: "gehen",
+    infinitiv: "gehen",
+    ich: "gehe",
+    duM: "gehst",
+    duW: "gehst",
+    er: "geht",
+    sie: "geht",
+    wir: "gehen",
+    ihr: "geht",
+    siePlr: "gehen",
+    audio: null,
+  },
+  {
+    id: 2,
+    deutsch: "sprechen",
+    infinitiv: "sprechen",
+    ich: "spreche",
+    duM: "sprichst",
+    duW: "sprichst",
+    er: "spricht",
+
+    sie: "spricht",
+    wir: "sprechen",
+    ihr: "sprecht",
+    siePlr: "sprechen",
+    audio: null,
+  },
+  {
+    id: 3,
+    deutsch: "sehen",
+    infinitiv: "sehen",
+    ich: "sehe",
+    duM: "siehst",
+    duW: "siehst",
+    er: "sieht",
+    sie: "sieht",
+    wir: "sehen",
+    ihr: "seht",
+    siePlr: "sehen",
+    audio: null,
+  },
+];

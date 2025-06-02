@@ -1,2 +1,7 @@
-# vocabs
-A simple and modular vocabulary trainer for learning languages.
+## Getting Started
+
+npm run build
+npm start
+npm run dev
+
+
