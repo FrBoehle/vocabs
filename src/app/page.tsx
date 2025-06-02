@@ -14,6 +14,7 @@ import { ProjectNavbar } from "./components/ProjectNavbar";
 import { WordGrid, RowData } from "./components/WordGrid";
 import { exampleData } from "./data/initialsRows";
 import { AddRowDialog } from "./components/AddRowDialog";
+import { EditRowDialog } from "./components/EditRowDialog";
 
 const darkTheme = createTheme({
   palette: {
@@ -43,6 +44,8 @@ function App() {
   const [projectName, setProjectName] = useState("Assyrisch lernen");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newRow, setNewRow] = useState<RowData>(defaultRow);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editRow, setEditRow] = useState<RowData | null>(null);
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
@@ -53,7 +56,16 @@ function App() {
   };
 
   const handleEditRow = (row: RowData) => {
-    // Dialog öffnen oder Edit-Logik hier einfügen
+    setEditRow(row);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditRowConfirm = () => {
+    if (editRow) {
+      setRows(rows.map((r) => (r.id === editRow.id ? editRow : r)));
+      setEditDialogOpen(false);
+      setEditRow(null);
+    }
   };
 
   const handleAddRow = () => setAddDialogOpen(true);
@@ -98,6 +110,13 @@ function App() {
               onChange={setNewRow}
               onClose={() => setAddDialogOpen(false)}
               onAdd={handleAddRowConfirm}
+            />
+            <EditRowDialog
+              open={editDialogOpen}
+              row={editRow}
+              onChange={(row) => setEditRow(row)}
+              onClose={() => setEditDialogOpen(false)}
+              onSave={handleEditRowConfirm}
             />
           </>
         )}
