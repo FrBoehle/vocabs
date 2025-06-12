@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
   CssBaseline,
   createTheme,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import { ProjectNavbar } from "./components/ProjectNavbar";
 import { WordGrid, RowData } from "./components/WordGrid";
-import { exampleData } from "./data/initialsRows";
 import { AddRowDialog } from "./components/dialogs/AddRowDialog";
 import { EditRowDialog } from "./components/dialogs/EditRowDialog";
 import { DeleteConfirmDialog } from "./components/dialogs/DeleteConfirmDialog";
@@ -38,15 +38,27 @@ const defaultRow: RowData = {
 };
 
 function App() {
-  const [rows, setRows] = useState<RowData[]>(exampleData);
+  const [rows, setRows] = useState<RowData[]>([]);
 
   const [tabIndex, setTabIndex] = useState(0);
-  const [projectName, setProjectName] = useState("Assyrisch lernen");
+  const [projectName] = useState("Lernen");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState<RowData | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<RowData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/words")
+      .then((res) => {
+        console.log("Response status:", res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Fetched rows:", data);
+        setRows(data);
+      });
+  }, []);
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
@@ -77,13 +89,31 @@ function App() {
 
   const handleAddRow = () => setAddDialogOpen(true);
 
-  const handleAddRowConfirm = (row: RowData) => {
+  const handleAddRowConfirm = async (row: RowData) => {
     setRows((rows) => [
       ...rows,
       { ...row, id: rows.length ? Math.max(...rows.map((r) => r.id)) + 1 : 1 },
     ]);
     setAddDialogOpen(false);
+
+    await fetch("/api/words", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(row),
+    });
   };
+
+  if (rows.length === 0) {
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Container maxWidth="xl" sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="body1">{captions.loadingDescription}</Typography>
+          <CircularProgress />
+        </Container>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -117,12 +147,18 @@ function App() {
               open={editDialogOpen}
               row={editRow}
               onClose={() => setEditDialogOpen(false)}
-              onSave={(updatedRow: RowData) => {
+              onSave={async (updatedRow: RowData) => {
                 setRows((rows) =>
                   rows.map((r) => (r.id === updatedRow.id ? updatedRow : r))
                 );
                 setEditDialogOpen(false);
                 setEditRow(null);
+
+                await fetch("/api/words", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(updatedRow),
+                });
               }}
             />
             <DeleteConfirmDialog
