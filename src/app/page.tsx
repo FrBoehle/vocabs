@@ -15,6 +15,8 @@ import { AddRowDialog } from "./components/dialogs/AddRowDialog";
 import { EditRowDialog } from "./components/dialogs/EditRowDialog";
 import { DeleteConfirmDialog } from "./components/dialogs/DeleteConfirmDialog";
 import { captions } from "./resources/captions.res";
+import { Login } from "./components/Login";
+import { messages } from "./resources/messages.res";
 
 const darkTheme = createTheme({
   palette: {
@@ -41,24 +43,34 @@ function App() {
   const [rows, setRows] = useState<RowData[]>([]);
 
   const [tabIndex, setTabIndex] = useState(0);
-  const [projectName] = useState("Lernen");
+  const [projectName] = useState("Sprache: Assyrisch");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState<RowData | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<RowData | null>(null);
 
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined);
+
   useEffect(() => {
-    fetch("/api/words")
-      .then((res) => {
-        console.log("Response status:", res);
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Fetched rows:", data);
-        setRows(data);
-      });
+    fetch("/api/login")
+      .then((res) => (res.ok ? res.json() : { loggedIn: false }))
+      .then((data) => setIsLoggedIn(data.loggedIn));
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetch("/api/words")
+        .then((res) => {
+          console.log("Response status:", res);
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Fetched rows:", data);
+          setRows(data);
+        });
+    }
+  }, [isLoggedIn]);
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
@@ -102,6 +114,22 @@ function App() {
       body: JSON.stringify(row),
     });
   };
+
+  if (isLoggedIn === undefined) {
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Container maxWidth="xl" sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="body1">{captions.loadingDescription}</Typography>
+          <CircularProgress />
+        </Container>
+      </ThemeProvider>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   if (rows.length === 0) {
     return (
@@ -163,7 +191,7 @@ function App() {
             />
             <DeleteConfirmDialog
               open={deleteDialogOpen}
-              message="Möchtest du diese Zeile wirklich löschen?"
+              message={messages.deleteConfirm}
               onCancel={handleDeleteCancel}
               onConfirm={handleDeleteConfirm}
             />

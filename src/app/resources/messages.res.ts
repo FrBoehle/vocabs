@@ -7,4 +7,5 @@ export const messages = {
   save: "Speichern",
   delete: "Löschen",
   confirmDeleteTitle: "Löschen bestätigen",
+  wrongPW: "Falsches Passwort",
 };
