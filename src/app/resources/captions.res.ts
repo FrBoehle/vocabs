@@ -17,4 +17,6 @@ export const captions = {
   addWord: "+ Neues Wort hinzufügen",
   audioSample: "Audiosample",
   actions: "Aktionen",
+  loading: "Lade Daten...",
+  loadingDescription: "Die Daten werden vom Server geladen. Bitte warten...",
 };

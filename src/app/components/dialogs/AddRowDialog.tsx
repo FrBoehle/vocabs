@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { RowData } from "../WordGrid";
 import { FormFields } from "./FormFields";
-import { captions } from "@/app/resources/captions.res";
 import { messages } from "@/app/resources/messages.res";
 
 interface AddRowDialogProps {

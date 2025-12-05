@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -17,14 +17,16 @@ import {
   List,
   ListItem,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import { ProjectNavbar } from "./components/ProjectNavbar";
 import { WordGrid, RowData } from "./components/WordGrid";
-import { exampleData } from "./data/initialsRows";
 import { AddRowDialog } from "./components/dialogs/AddRowDialog";
 import { EditRowDialog } from "./components/dialogs/EditRowDialog";
 import { DeleteConfirmDialog } from "./components/dialogs/DeleteConfirmDialog";
 import { captions } from "./resources/captions.res";
+import { Login } from "./components/Login";
+import { messages } from "./resources/messages.res";
 
 const darkTheme = createTheme({
   palette: {
@@ -48,10 +50,10 @@ const defaultRow: RowData = {
 };
 
 function App() {
-  const [rows, setRows] = useState<RowData[]>(exampleData);
+  const [rows, setRows] = useState<RowData[]>([]);
 
   const [tabIndex, setTabIndex] = useState(0);
-  const [projectName, setProjectName] = useState("Assyrisch lernen");
+  const [projectName] = useState("Sprache: Assyrisch");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editRow, setEditRow] = useState<RowData | null>(null);
@@ -69,6 +71,27 @@ function App() {
     setDetailDialogOpen(true);
   };
   //#endregion mobile
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    fetch("/api/login")
+      .then((res) => (res.ok ? res.json() : { loggedIn: false }))
+      .then((data) => setIsLoggedIn(data.loggedIn));
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetch("/api/words")
+        .then((res) => {
+          console.log("Response status:", res);
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Fetched rows:", data);
+          setRows(data);
+        });
+    }
+  }, [isLoggedIn]);
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
@@ -99,13 +122,47 @@ function App() {
 
   const handleAddRow = () => setAddDialogOpen(true);
 
-  const handleAddRowConfirm = (row: RowData) => {
+  const handleAddRowConfirm = async (row: RowData) => {
     setRows((rows) => [
       ...rows,
       { ...row, id: rows.length ? Math.max(...rows.map((r) => r.id)) + 1 : 1 },
     ]);
     setAddDialogOpen(false);
+
+    await fetch("/api/words", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(row),
+    });
   };
+
+  if (isLoggedIn === undefined) {
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Container maxWidth="xl" sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="body1">{captions.loadingDescription}</Typography>
+          <CircularProgress />
+        </Container>
+      </ThemeProvider>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
+
+  if (rows.length === 0) {
+    return (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Container maxWidth="xl" sx={{ mt: 4, textAlign: "center" }}>
+          <Typography variant="body1">{captions.loadingDescription}</Typography>
+          <CircularProgress />
+        </Container>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -215,17 +272,23 @@ function App() {
               open={editDialogOpen}
               row={editRow}
               onClose={() => setEditDialogOpen(false)}
-              onSave={(updatedRow: RowData) => {
+              onSave={async (updatedRow: RowData) => {
                 setRows((rows) =>
                   rows.map((r) => (r.id === updatedRow.id ? updatedRow : r))
                 );
                 setEditDialogOpen(false);
                 setEditRow(null);
+
+                await fetch("/api/words", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(updatedRow),
+                });
               }}
             />
             <DeleteConfirmDialog
               open={deleteDialogOpen}
-              message="Möchtest du diese Zeile wirklich löschen?"
+              message={messages.deleteConfirm}
               onCancel={handleDeleteCancel}
               onConfirm={handleDeleteConfirm}
             />

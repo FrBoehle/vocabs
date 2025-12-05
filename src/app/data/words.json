@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "deutsch": "gehen",
+    "infinitiv": "gehen",
+    "ich": "gehe",
+    "duM": "gehst",
+    "duW": "gehst",
+    "er": "geht",
+    "sie": "geht",
+    "wir": "gehen",
+    "ihr": "geht",
+    "siePlr": "gehen",
+    "audio": null
+  },
+  {
+    "id": 2,
+    "deutsch": "test",
+    "infinitiv": "",
+    "ich": "",
+    "duM": "",
+    "duW": "",
+    "er": "",
+    "sie": "",
+    "wir": "",
+    "ihr": "",
+    "siePlr": "",
+    "audio": null
+  }
+]
