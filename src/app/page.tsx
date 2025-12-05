@@ -7,6 +7,16 @@ import {
   CssBaseline,
   createTheme,
   ThemeProvider,
+  useMediaQuery,
+  useTheme,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { ProjectNavbar } from "./components/ProjectNavbar";
 import { WordGrid, RowData } from "./components/WordGrid";
@@ -47,6 +57,18 @@ function App() {
   const [editRow, setEditRow] = useState<RowData | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<RowData | null>(null);
+
+  //#region mobile
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [selectedRow, setSelectedRow] = useState<RowData | null>(null);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+
+  const handleWordClick = (row: RowData) => {
+    setSelectedRow(row);
+    setDetailDialogOpen(true);
+  };
+  //#endregion mobile
 
   const handleAudioUpload = (id: number, file: File | null) => {
     setRows(rows.map((row) => (row.id === id ? { ...row, audio: file } : row)));
@@ -92,6 +114,8 @@ function App() {
         projectName={projectName}
         tabIndex={tabIndex}
         onTabChange={(_, newValue) => setTabIndex(newValue)}
+        theme={theme}
+        isMobile={isMobile}
       />
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         {tabIndex === 0 && (
@@ -100,13 +124,87 @@ function App() {
               {captions.verbs}
             </Typography>
 
-            <WordGrid
-              rows={rows}
-              onDelete={handleDeleteClick}
-              onAudioUpload={handleAudioUpload}
-              onEdit={handleEditRow}
-              onAdd={handleAddRow}
-            />
+            {isMobile ? (
+              <>
+                <List>
+                  {rows.map((row) => (
+                    <ListItem
+                      component="button"
+                      key={row.id}
+                      onClick={() => handleWordClick(row)}
+                    >
+                      <ListItemText primary={row.deutsch} secondary={row.infinitiv} />
+                    </ListItem>
+                  ))}
+                </List>
+                <Dialog
+                  open={detailDialogOpen}
+                  onClose={() => setDetailDialogOpen(false)}
+                  fullWidth
+                >
+                  <DialogTitle>{selectedRow?.deutsch}</DialogTitle>
+                  <DialogContent>
+                    {selectedRow && (
+                      <>
+                        <div>
+                          <b>{captions.infinitiv}:</b> {selectedRow.infinitiv}
+                        </div>
+                        <div>
+                          <b>{captions.ich}:</b> {selectedRow.ich}
+                        </div>
+                        <div>
+                          <b>{captions.duM}:</b> {selectedRow.duM}
+                        </div>
+                        <div>
+                          <b>{captions.duW}:</b> {selectedRow.duW}
+                        </div>
+                        <div>
+                          <b>{captions.er}:</b> {selectedRow.er}
+                        </div>
+                        <div>
+                          <b>{captions.sie}:</b> {selectedRow.sie}
+                        </div>
+                        <div>
+                          <b>{captions.wir}:</b> {selectedRow.wir}
+                        </div>
+                        <div>
+                          <b>{captions.ihr}:</b> {selectedRow.ihr}
+                        </div>
+                        <div>
+                          <b>{captions.siePlr}:</b> {selectedRow.siePlr}
+                        </div>
+                        {selectedRow.audio && (
+                          <div>
+                            <b>{captions.audioSample}:</b>
+                            <audio
+                              controls
+                              src={
+                                typeof window !== "undefined"
+                                  ? URL.createObjectURL(selectedRow.audio)
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={() => setDetailDialogOpen(false)}>
+                      OK
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </>
+            ) : (
+              <WordGrid
+                rows={rows}
+                onDelete={handleDeleteClick}
+                onAudioUpload={handleAudioUpload}
+                onEdit={handleEditRow}
+                onAdd={handleAddRow}
+              />
+            )}
             <AddRowDialog
               open={addDialogOpen}
               defaultRow={defaultRow}
