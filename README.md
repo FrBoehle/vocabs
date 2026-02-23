@@ -9,10 +9,12 @@ Ein visuell attraktiver Sprachtrainer mit integriertem Wörterbuch und mehreren 
 - ⌨️ Schreibtraining zum aktiven Abrufen von Übersetzungen.
 - ⚡ Schnell-Quiz mit Punkteanzeige.
 
-## Lokal starten
+## Dev Server starten (einfach)
 ```bash
-python -m http.server 4173
+npm run dev
 ```
-Dann im Browser öffnen:
 
-`http://localhost:4173`
+Optional mit anderem Port:
+```bash
+PORT=5000 npm run dev
+```
