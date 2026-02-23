@@ -22,6 +22,37 @@ body {
   color: var(--text);
 }
 
+#celebration-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: confetti-fall 900ms ease-out forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(120px) scale(1) rotate(220deg);
+  }
+}
+
 .app-shell {
   width: min(1200px, 94vw);
   margin: 2rem auto;
@@ -202,6 +233,49 @@ button.danger {
 button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.flashcard.correct-hit {
+  animation: card-success 420ms ease;
+}
+
+.flashcard.wrong-hit {
+  animation: card-shake 420ms ease;
+}
+
+.streak-pill.streak-pop {
+  animation: streak-pop 420ms ease;
+}
+
+.quiz-option.is-correct {
+  background: linear-gradient(135deg, #95f8ba 0%, #62d79b 100%);
+  color: #062214;
+}
+
+.quiz-option.is-wrong {
+  background: linear-gradient(135deg, #ff9f9f 0%, #ff7272 100%);
+  color: #340808;
+}
+
+@keyframes card-success {
+  0% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.03); filter: brightness(1.15); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes card-shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes streak-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 .flashcard {

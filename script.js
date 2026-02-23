@@ -106,7 +106,42 @@ const refs = {
   quizFeedback: document.querySelector("#quiz-feedback"),
   nextQuiz: document.querySelector("#next-quiz"),
   quizScore: document.querySelector("#quiz-score"),
+  celebrationLayer: document.querySelector("#celebration-layer"),
 };
+
+
+function triggerConfettiBurst() {
+  const host = refs.celebrationLayer;
+  if (!host) return;
+  const colors = ["#80ffd4", "#4ce2b2", "#ffd166", "#c3a6ff", "#8be9ff"];
+  for (let i = 0; i < 18; i += 1) {
+    const node = document.createElement("span");
+    node.className = "confetti";
+    node.style.left = `${Math.random() * 100}%`;
+    node.style.top = `${28 + Math.random() * 22}%`;
+    node.style.background = colors[Math.floor(Math.random() * colors.length)];
+    node.style.animationDelay = `${Math.random() * 130}ms`;
+    host.appendChild(node);
+    setTimeout(() => node.remove(), 1000);
+  }
+}
+
+function animateFlashcardResult(kind) {
+  refs.flashcard.classList.remove("correct-hit", "wrong-hit");
+  refs.flashcard.classList.add(kind === "correct" ? "correct-hit" : "wrong-hit");
+  setTimeout(() => refs.flashcard.classList.remove("correct-hit", "wrong-hit"), 430);
+}
+
+function animateStreakPill() {
+  refs.streakCurrent.classList.remove("streak-pop");
+  refs.streakHighscore.classList.remove("streak-pop");
+  refs.streakCurrent.classList.add("streak-pop");
+  refs.streakHighscore.classList.add("streak-pop");
+  setTimeout(() => {
+    refs.streakCurrent.classList.remove("streak-pop");
+    refs.streakHighscore.classList.remove("streak-pop");
+  }, 430);
+}
 
 function getFilteredEntries() {
   if (state.topic === "Alle") return entries;
@@ -218,19 +253,24 @@ function setupFlashcardControls() {
   });
 
   refs.markKnown.addEventListener("click", () => {
+    animateFlashcardResult("correct");
+    triggerConfettiBurst();
     state.streak += 1;
     if (state.streak > state.highscore) {
       state.highscore = state.streak;
       localStorage.setItem(HIGH_SCORE_KEY, String(state.highscore));
     }
     updateStreakUI();
+    animateStreakPill();
     state.cardIndex += 1;
     renderFlashcard();
   });
 
   refs.markUnknown.addEventListener("click", () => {
+    animateFlashcardResult("wrong");
     state.streak = 0;
     updateStreakUI();
+    animateStreakPill();
     state.cardIndex += 1;
     renderFlashcard();
   });
@@ -323,10 +363,24 @@ function setupQuizRound(reset = false) {
     button.addEventListener("click", () => {
       const selected = button.dataset.option;
       const isCorrect = selected === state.quizEntry.target;
-      if (isCorrect) state.quizScore += 1;
+      if (isCorrect) {
+        state.quizScore += 1;
+        triggerConfettiBurst();
+      }
+
+      refs.quizOptions.querySelectorAll("button").forEach((opt) => {
+        opt.disabled = true;
+        const value = opt.dataset.option;
+        if (value === state.quizEntry.target) opt.classList.add("is-correct");
+      });
+
+      if (!isCorrect) {
+        button.classList.add("is-wrong");
+      }
+
       refs.quizFeedback.className = `feedback ${isCorrect ? "ok" : "wrong"}`;
       refs.quizFeedback.textContent = isCorrect
-        ? "Richtig!"
+        ? "Richtig! Stark gemacht ✨"
         : `Nicht ganz. Korrekt: ${state.quizEntry.target}`;
       refs.quizScore.textContent = `Punkte: ${state.quizScore} · Runde ${Math.min(state.quizRound, 5)}/5`;
     });
