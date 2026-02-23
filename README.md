@@ -9,12 +9,17 @@ Ein visuell attraktiver Sprachtrainer mit integriertem Wörterbuch und mehreren 
 - ⌨️ Schreibtraining zum aktiven Abrufen von Übersetzungen.
 - ⚡ Schnell-Quiz mit Punkteanzeige.
 
-## Dev Server starten (einfach)
+## Starten (Standard)
+```bash
+npm start
+```
+
+## Alternative (wie bisher)
 ```bash
 npm run dev
 ```
 
 Optional mit anderem Port:
 ```bash
-PORT=5000 npm run dev
+PORT=5000 npm start
 ```
