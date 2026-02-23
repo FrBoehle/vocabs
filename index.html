@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocab Vista · Sprachtrainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <p class="badge">Vocab Vista</p>
+        <h1>Dein visuelles Wörterbuch zum Sprachenlernen</h1>
+        <p>
+          Trainiere neue Wörter mit Karteikarten, Schreibmodus und einem schnellen Quiz.
+          Wechsle flexibel zwischen Text und Bildansicht, um dir Vokabeln schneller zu merken.
+        </p>
+      </header>
+
+      <main class="layout">
+        <section class="panel">
+          <h2>Wörterbuch</h2>
+          <p class="muted">Wähle einen Bereich und starte danach eine Lernmethode.</p>
+
+          <div class="toolbar">
+            <label for="language-filter">Thema</label>
+            <select id="language-filter"></select>
+          </div>
+
+          <ul id="dictionary-list" class="dictionary-list" aria-live="polite"></ul>
+        </section>
+
+        <section class="panel learn">
+          <div class="learn-header">
+            <h2>Lernmodi</h2>
+            <div class="mode-switch" role="tablist" aria-label="Lernmethoden">
+              <button class="mode-btn active" data-mode="flashcards" role="tab" aria-selected="true">
+                Karteikarten
+              </button>
+              <button class="mode-btn" data-mode="typing" role="tab" aria-selected="false">
+                Schreibtraining
+              </button>
+              <button class="mode-btn" data-mode="quiz" role="tab" aria-selected="false">
+                Schnell-Quiz
+              </button>
+            </div>
+          </div>
+
+          <section id="flashcards" class="mode-panel active" role="tabpanel">
+            <div class="controls-row">
+              <button id="prev-card" class="secondary">← Zurück</button>
+              <button id="flip-card">Karte umdrehen</button>
+              <button id="next-card" class="secondary">Weiter →</button>
+            </div>
+
+            <div class="controls-row">
+              <span id="card-counter" class="muted"></span>
+              <button id="toggle-card-view" class="secondary">Text/Bild wechseln</button>
+            </div>
+
+            <div id="flashcard" class="flashcard" tabindex="0" aria-label="Karteikarte, Enter zum Umdrehen">
+              <div class="flashcard-inner">
+                <article class="flashcard-face flashcard-front">
+                  <p class="face-label">Vorderseite</p>
+                  <div id="card-front-content" class="face-content"></div>
+                </article>
+                <article class="flashcard-face flashcard-back">
+                  <p class="face-label">Rückseite</p>
+                  <div id="card-back-content" class="face-content"></div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section id="typing" class="mode-panel" role="tabpanel" aria-hidden="true">
+            <p class="muted">Tippe die Übersetzung in die Zielsprache.</p>
+            <div class="typing-card">
+              <p id="typing-prompt" class="typing-prompt"></p>
+              <label for="typing-input">Deine Antwort</label>
+              <input id="typing-input" type="text" placeholder="z. B. apple" autocomplete="off" />
+              <div class="controls-row">
+                <button id="check-typing">Prüfen</button>
+                <button id="next-typing" class="secondary">Nächstes Wort</button>
+              </div>
+              <p id="typing-feedback" class="feedback" aria-live="polite"></p>
+            </div>
+          </section>
+
+          <section id="quiz" class="mode-panel" role="tabpanel" aria-hidden="true">
+            <p class="muted">Wähle die richtige Übersetzung. 5 schnelle Fragen.</p>
+            <div class="quiz-card">
+              <p id="quiz-question" class="typing-prompt"></p>
+              <div id="quiz-options" class="quiz-options"></div>
+              <p id="quiz-feedback" class="feedback" aria-live="polite"></p>
+              <div class="controls-row">
+                <button id="next-quiz" class="secondary">Nächste Frage</button>
+                <span id="quiz-score" class="muted"></span>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
