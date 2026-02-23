@@ -64,6 +64,12 @@
               <button id="toggle-card-view" class="secondary">Text/Bild wechseln</button>
             </div>
 
+            <div class="streak-bar">
+              <span id="streak-current" class="streak-pill">Aktuelle Streak: 0</span>
+              <span id="streak-highscore" class="streak-pill">Highscore: 0</span>
+              <span id="streak-hint" class="muted">Drehe die Karte auf die Lösungsseite und bewerte dich.</span>
+            </div>
+
             <div id="flashcard" class="flashcard" tabindex="0" aria-label="Karteikarte, Enter zum Umdrehen">
               <div class="flashcard-inner">
                 <article class="flashcard-face flashcard-front">
@@ -75,6 +81,11 @@
                   <div id="card-back-content" class="face-content"></div>
                 </article>
               </div>
+            </div>
+
+            <div class="controls-row">
+              <button id="mark-known" class="success" disabled>✅ Wusste ich</button>
+              <button id="mark-unknown" class="danger" disabled>❌ Wusste ich nicht</button>
             </div>
           </section>
 

@@ -158,6 +158,22 @@ input {
   margin-bottom: 0.7rem;
 }
 
+.streak-bar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.streak-pill {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+}
+
 button {
   border: 0;
   border-radius: 10px;
@@ -171,6 +187,21 @@ button {
 button.secondary {
   background: rgba(255, 255, 255, 0.14);
   color: var(--text);
+}
+
+button.success {
+  background: linear-gradient(135deg, #95f8ba 0%, #62d79b 100%);
+  color: #062214;
+}
+
+button.danger {
+  background: linear-gradient(135deg, #ff9f9f 0%, #ff7272 100%);
+  color: #340808;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .flashcard {

@@ -74,6 +74,8 @@ const state = {
   quizEntry: null,
   quizScore: 0,
   quizRound: 0,
+  streak: 0,
+  highscore: 0,
 };
 
 const refs = {
@@ -89,6 +91,11 @@ const refs = {
   nextCard: document.querySelector("#next-card"),
   flipCard: document.querySelector("#flip-card"),
   toggleCardView: document.querySelector("#toggle-card-view"),
+  streakCurrent: document.querySelector("#streak-current"),
+  streakHighscore: document.querySelector("#streak-highscore"),
+  streakHint: document.querySelector("#streak-hint"),
+  markKnown: document.querySelector("#mark-known"),
+  markUnknown: document.querySelector("#mark-unknown"),
   typingPrompt: document.querySelector("#typing-prompt"),
   typingInput: document.querySelector("#typing-input"),
   checkTyping: document.querySelector("#check-typing"),
@@ -142,6 +149,28 @@ function cardMarkup(entry, side = "source") {
   return `<p class="term">${side === "source" ? entry.source : entry.target}</p>`;
 }
 
+
+const HIGH_SCORE_KEY = "vocab-vista-highscore";
+
+function loadHighscore() {
+  const stored = Number.parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? "0", 10);
+  state.highscore = Number.isNaN(stored) ? 0 : stored;
+}
+
+function updateStreakUI() {
+  refs.streakCurrent.textContent = `Aktuelle Streak: ${state.streak}`;
+  refs.streakHighscore.textContent = `Highscore: ${state.highscore}`;
+}
+
+function updateAnswerButtons() {
+  const isFlipped = refs.flashcard.classList.contains("is-flipped");
+  refs.markKnown.disabled = !isFlipped;
+  refs.markUnknown.disabled = !isFlipped;
+  refs.streakHint.textContent = isFlipped
+    ? "Hast du die Lösung gewusst? Wähle eine Bewertung."
+    : "Drehe die Karte auf die Lösungsseite und bewerte dich.";
+}
+
 function renderFlashcard() {
   const filtered = getFilteredEntries();
   if (!filtered.length) return;
@@ -153,10 +182,12 @@ function renderFlashcard() {
   refs.frontContent.innerHTML = cardMarkup(entry, "source");
   refs.backContent.innerHTML = cardMarkup(entry, "target");
   refs.flashcard.classList.remove("is-flipped");
+  updateAnswerButtons();
 }
 
 function flipCard() {
   refs.flashcard.classList.toggle("is-flipped");
+  updateAnswerButtons();
 }
 
 function setupFlashcardControls() {
@@ -183,6 +214,24 @@ function setupFlashcardControls() {
     state.cardVisualMode = state.cardVisualMode === "text" ? "image" : "text";
     refs.toggleCardView.textContent =
       state.cardVisualMode === "text" ? "Text/Bild wechseln" : "Bild/Text wechseln";
+    renderFlashcard();
+  });
+
+  refs.markKnown.addEventListener("click", () => {
+    state.streak += 1;
+    if (state.streak > state.highscore) {
+      state.highscore = state.streak;
+      localStorage.setItem(HIGH_SCORE_KEY, String(state.highscore));
+    }
+    updateStreakUI();
+    state.cardIndex += 1;
+    renderFlashcard();
+  });
+
+  refs.markUnknown.addEventListener("click", () => {
+    state.streak = 0;
+    updateStreakUI();
+    state.cardIndex += 1;
     renderFlashcard();
   });
 }
@@ -295,6 +344,8 @@ function setupQuizMode() {
 }
 
 function init() {
+  loadHighscore();
+  updateStreakUI();
   setupTopicFilter();
   renderDictionary();
   setupModes();
