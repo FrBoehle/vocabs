@@ -10,17 +10,22 @@ Ein visuell attraktiver Sprachtrainer mit integriertem Wörterbuch und mehreren 
 - ⌨️ Schreibtraining zum aktiven Abrufen von Übersetzungen.
 - ⚡ Schnell-Quiz mit Punkteanzeige.
 
-## Starten (Standard)
+## Setup
 ```bash
-npm start
+npm install
 ```
 
-## Alternative (wie bisher)
+## Dev-Server starten (Vite)
 ```bash
 npm run dev
 ```
 
-Optional mit anderem Port:
+## Build erzeugen
 ```bash
-PORT=5000 npm start
+npm run build
+```
+
+## Build lokal prüfen
+```bash
+npm run preview
 ```
