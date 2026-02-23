@@ -27,6 +27,12 @@ function resolvePath(urlPath) {
 }
 
 createServer(async (req, res) => {
+  if ((req.url ?? '').startsWith('/favicon.ico')) {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   try {
     const filePath = resolvePath(req.url ?? '/');
     const file = await readFile(filePath);
