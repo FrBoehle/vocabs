@@ -1,0 +1,7 @@
+[
+  { "id": "1", "assyrian": "Shlama", "english": "Hello / Peace", "phonetic": "Shla-ma" },
+  { "id": "2", "assyrian": "Khayeh", "english": "Life", "phonetic": "Kha-yeh" },
+  { "id": "3", "assyrian": "Basima", "english": "Thank you (Male)", "phonetic": "Ba-see-ma" },
+  { "id": "4", "assyrian": "Basimta", "english": "Thank you (Female)", "phonetic": "Ba-seem-ta" },
+  { "id": "5", "assyrian": "Alaha", "english": "God", "phonetic": "A-la-ha" }
+]
