@@ -8,9 +8,9 @@ type Props = {
 
 export function KpiTile({ label, value, tint }: Props) {
   return (
-    <Card width="48%" padding="$4" borderRadius="$4" borderWidth={1}>
+    <Card width="48%" padding="$4" borderRadius="$4" borderWidth={1} backgroundColor="$backgroundHover">
       <YStack gap="$2">
-        <Paragraph opacity={0.7} fontSize={13}>
+        <Paragraph color="$gray11" fontSize={13}>
           {label}
         </Paragraph>
         <XStack alignItems="baseline" gap="$2">

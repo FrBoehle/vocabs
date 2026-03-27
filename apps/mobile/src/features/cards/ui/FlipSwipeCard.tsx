@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, useColorScheme } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -28,6 +28,17 @@ type Props = {
 
 export function FlipSwipeCard({ card, onSwiped }: Props) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const knownGradientColors = isDark
+    ? (['#052E16', '#166534'] as const)
+    : (['#ECFDF3', '#86EFAC'] as const);
+  const reviewGradientColors = isDark
+    ? (['#450A0A', '#991B1B'] as const)
+    : (['#FEF2F2', '#FCA5A5'] as const);
+  const knownLabelColor = isDark ? '#DCFCE7' : '#14532D';
+  const reviewLabelColor = isDark ? '#FEE2E2' : '#7F1D1D';
 
   const flip = useSharedValue(0);
   const translateX = useSharedValue(0);
@@ -177,7 +188,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
             padding="$6"
             borderRadius="$5"
             borderWidth={1}
-            backgroundColor="#FFFFFF"
+            backgroundColor="$background"
             overflow="hidden"
             justifyContent="space-between"
           >
@@ -194,7 +205,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
                 greenGradientStyle,
               ]}
             >
-              <LinearGradient colors={['#ECFDF3', '#86EFAC']} style={{ flex: 1 }} />
+              <LinearGradient colors={knownGradientColors} style={{ flex: 1 }} />
             </Animated.View>
 
             <Animated.View
@@ -210,7 +221,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
                 redGradientStyle,
               ]}
             >
-              <LinearGradient colors={['#FEF2F2', '#FCA5A5']} style={{ flex: 1 }} />
+              <LinearGradient colors={reviewGradientColors} style={{ flex: 1 }} />
             </Animated.View>
 
             <Animated.View
@@ -223,7 +234,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
                 goodStyle,
               ]}
             >
-              <SizableText size="$8" fontWeight="700">
+              <SizableText size="$8" fontWeight="700" color={knownLabelColor}>
                 KNOWN
               </SizableText>
             </Animated.View>
@@ -238,7 +249,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
                 badStyle,
               ]}
             >
-              <SizableText size="$8" fontWeight="700">
+              <SizableText size="$8" fontWeight="700" color={reviewLabelColor}>
                 REVIEW
               </SizableText>
             </Animated.View>
@@ -282,7 +293,7 @@ export function FlipSwipeCard({ card, onSwiped }: Props) {
       </GestureDetector>
 
       {isFlipped && card.notes?.trim() ? (
-        <YStack width={CARD_WIDTH} borderRadius="$4" borderWidth={1} padding="$3" backgroundColor="#FFFFFF">
+        <YStack width={CARD_WIDTH} borderRadius="$4" borderWidth={1} padding="$3" backgroundColor="$background">
           <Paragraph opacity={0.7}>
             Notes
           </Paragraph>

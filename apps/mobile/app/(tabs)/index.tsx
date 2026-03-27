@@ -1,11 +1,12 @@
 import { ScrollView } from 'react-native';
-import { H2, Paragraph, SizableText, XStack, YStack } from 'tamagui';
+import { H2, Paragraph, SizableText, XStack, YStack, useTheme } from 'tamagui';
 
 import { calculateMastery, countDueCards } from '../../src/domain/services/spacedRepetition';
 import { useCardStore } from '../../src/features/cards/store/cardStore';
 import { KpiTile } from '../../src/features/dashboard/ui/KpiTile';
 
 export default function DashboardScreen() {
+  const theme = useTheme();
   const cards = useCardStore((state) => state.cards);
   const learnedToday = useCardStore((state) => state.learnedToday);
   const streakDays = useCardStore((state) => state.streakDays);
@@ -19,16 +20,16 @@ export default function DashboardScreen() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
-      <YStack gap="$2" padding="$5" borderWidth={1} borderRadius="$5">
+    <ScrollView style={{ flex: 1, backgroundColor: theme.background.val }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+      <YStack gap="$2" padding="$5" borderWidth={1} borderRadius="$5" backgroundColor="$backgroundHover">
         <YStack gap="$2" flex={1}>
-          <Paragraph>
+          <Paragraph color="$gray11">
             vocabs
           </Paragraph>
           <H2>Welcome back, Franz</H2>
         </YStack>
 
-        <SizableText size="$5">
+        <SizableText size="$5" color="$gray12">
           Keep your streak alive and master today&apos;s cards.
         </SizableText>
       </YStack>
@@ -40,14 +41,14 @@ export default function DashboardScreen() {
         <KpiTile label="Total cards" value={String(stats.totalCards)} tint="$gray11" />
       </XStack>
 
-      <YStack borderRadius="$5" padding="$5" borderWidth={1} gap="$2">
-        <Paragraph opacity={0.7}>
+      <YStack borderRadius="$5" padding="$5" borderWidth={1} gap="$2" backgroundColor="$backgroundHover">
+        <Paragraph color="$gray11">
           Mastery
         </Paragraph>
         <SizableText size="$10" fontWeight="800">
           {stats.masteryPercent}%
         </SizableText>
-        <Paragraph opacity={0.8}>
+        <Paragraph color="$gray11">
           Reach 80% mastery to unlock advanced deck generation in the next milestone.
         </Paragraph>
       </YStack>

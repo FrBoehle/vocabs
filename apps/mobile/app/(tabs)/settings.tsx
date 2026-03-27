@@ -1,16 +1,17 @@
 import { ScrollView } from 'react-native';
-import { Button, H2, ListItem, Paragraph, SizableText, YStack } from 'tamagui';
+import { Button, H2, ListItem, Paragraph, SizableText, YStack, useTheme } from 'tamagui';
 
 import { useCardStore } from '../../src/features/cards/store/cardStore';
 
 export default function SettingsScreen() {
   const resetSession = useCardStore((state) => state.resetSession);
+  const theme = useTheme();
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-      <YStack gap="$4" borderRadius="$5" padding="$5" borderWidth={1}>
+    <ScrollView style={{ flex: 1, backgroundColor: theme.background.val }} contentContainerStyle={{ padding: 16 }}>
+      <YStack gap="$4" borderRadius="$5" padding="$5" borderWidth={1} backgroundColor="$backgroundHover">
         <H2>Settings</H2>
-        <Paragraph opacity={0.8}>
+        <Paragraph color="$gray11">
           This MVP is offline-first with demo data. You can reset your progress anytime.
         </Paragraph>
 
@@ -18,8 +19,10 @@ export default function SettingsScreen() {
           <SizableText fontWeight="700">
             Owned Language Packs
           </SizableText>
-          <ListItem opacity={0.75}>
-            German to Assyrian
+          <ListItem>
+            <Paragraph color="$gray11">
+              German to Assyrian
+            </Paragraph>
           </ListItem>
         </YStack>
 
@@ -31,10 +34,10 @@ export default function SettingsScreen() {
           <SizableText fontWeight="700">
             About
           </SizableText>
-          <Paragraph opacity={0.75}>
+          <Paragraph color="$gray11">
             Franz Böhle, 2026
           </Paragraph>
-          <Paragraph opacity={0.6}>
+          <Paragraph color="$gray10">
             Version 1.0.0
           </Paragraph>
         </YStack>

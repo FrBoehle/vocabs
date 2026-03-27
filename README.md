@@ -22,6 +22,14 @@ Initial implementation is in place:
 - `apps/mobile`: mobile app code.
 - `docs/ARCHITECTURE.md`: architecture and extension strategy.
 
+## AI-ready setup
+
+This repository includes AI customization files for consistent agent behavior:
+- `.github/copilot-instructions.md`: workspace-wide coding guidance.
+- `.github/instructions/mobile-app.instructions.md`: file-scoped rules for `apps/mobile`.
+- `.github/prompts/mobile-release-check.prompt.md`: reusable release-readiness prompt.
+- `.github/skills/mobile-feature-workflow/SKILL.md`: reusable feature delivery workflow.
+
 ## Local development (macOS + Android)
 
 Prerequisites:

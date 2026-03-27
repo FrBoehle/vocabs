@@ -2,13 +2,14 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useNavigation } from 'expo-router';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { Button, Dialog, Input, Paragraph, SizableText, TextArea, XStack, YStack } from 'tamagui';
+import { Button, Dialog, Input, Paragraph, SizableText, TextArea, XStack, YStack, useTheme } from 'tamagui';
 
 import { useCardStore } from '../../src/features/cards/store/cardStore';
 import { FlipSwipeCard } from '../../src/features/cards/ui/FlipSwipeCard';
 
 export default function StudyScreen() {
   const navigation = useNavigation();
+  const theme = useTheme();
   const currentIndex = useCardStore((state) => state.currentIndex);
   const cards = useCardStore((state) => state.cards);
   const swipeCurrentCard = useCardStore((state) => state.swipeCurrentCard);
@@ -83,17 +84,17 @@ export default function StudyScreen() {
             gap="$3"
             maxWidth={520}
             width="92%"
-            backgroundColor="#FFFFFF"
+            backgroundColor="$background"
           >
-            <Dialog.Title color="#0F172A">Add New Word</Dialog.Title>
-            <Dialog.Description color="#334155">
+            <Dialog.Title>Add New Word</Dialog.Title>
+            <Dialog.Description>
               Create a new card for the German to Assyrian deck.
             </Dialog.Description>
 
             <Input
               placeholder="German"
               placeholderTextColor="$gray10"
-              color="#0F172A"
+              color="$color"
               value={frontText}
               onChangeText={(value) => {
                 setFrontText(value);
@@ -105,7 +106,7 @@ export default function StudyScreen() {
             <Input
               placeholder="Assyrian"
               placeholderTextColor="$gray10"
-              color="#0F172A"
+              color="$color"
               value={backText}
               onChangeText={(value) => {
                 setBackText(value);
@@ -117,14 +118,14 @@ export default function StudyScreen() {
             <TextArea
               placeholder="Optional notes"
               placeholderTextColor="$gray10"
-              color="#0F172A"
+              color="$color"
               value={notes}
               onChangeText={setNotes}
               minHeight={90}
             />
 
             {formError ? (
-              <Paragraph color="#B91C1C">
+              <Paragraph color="$red10">
                 {formError}
               </Paragraph>
             ) : null}
@@ -141,21 +142,24 @@ export default function StudyScreen() {
         </Dialog.Portal>
       </Dialog>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 14 }}>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.background.val }}
+        contentContainerStyle={{ padding: 16, gap: 14 }}
+      >
         <YStack gap="$3">
-          <YStack gap="$2" borderRadius="$4" padding="$3" borderWidth={1}>
+          <YStack gap="$2" borderRadius="$4" padding="$3" borderWidth={1} backgroundColor="$backgroundHover">
             <XStack justifyContent="space-between">
-              <Paragraph opacity={0.7}>
+              <Paragraph color="$gray11">
                 Deck progress
               </Paragraph>
-              <Paragraph opacity={0.7}>
+              <Paragraph color="$gray11">
                 {Math.round(progress * 100)}%
               </Paragraph>
             </XStack>
-            <YStack height={10} borderRadius={999} overflow="hidden">
-              <Animated.View style={[{ height: '100%', backgroundColor: '#0EA5E9' }, progressStyle]} />
+            <YStack height={10} borderRadius={999} overflow="hidden" backgroundColor="$gray5">
+              <Animated.View style={[{ height: '100%', backgroundColor: theme.blue9.val }, progressStyle]} />
             </YStack>
-            <Paragraph opacity={0.65}>
+            <Paragraph color="$gray11">
               {cards.length > 0 ? `Card ${currentIndex + 1} of ${cards.length}` : 'No cards yet. Add your first card.'}
             </Paragraph>
           </YStack>
@@ -168,7 +172,7 @@ export default function StudyScreen() {
             <SizableText size="$8" fontWeight="700">
               No cards in your deck
             </SizableText>
-            <Paragraph opacity={0.7} textAlign="center" marginTop="$2">
+            <Paragraph color="$gray11" textAlign="center" marginTop="$2">
               Tap Add Word in the top-right header to create your first custom card.
             </Paragraph>
           </YStack>
