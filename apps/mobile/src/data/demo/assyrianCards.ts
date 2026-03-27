@@ -1,5 +1,5 @@
 import { addDays } from '../../utils/date';
-import { AssyrianCard } from '../../domain/types/cards';
+import { AssyrianCard, WordType } from '../../domain/types/cards';
 
 const now = new Date();
 
@@ -19,12 +19,9 @@ const seedCards: DemoSeedCard[] = [
   { id: 'adj-05', deckId: 'adjektive', frontText: 'frech/ungehobelt', backText: 'schumanta / schumana' },
   { id: 'adj-06', deckId: 'adjektive', frontText: 'einfach', backText: 'Sanayi' },
   { id: 'adj-07', deckId: 'adjektive', frontText: 'neu', backText: 'Khatha (m) / Khathta (w) / Khathe (pl)' },
-  { id: 'adj-08', deckId: 'adjektive', frontText: 'interessant', backText: '???', notes: 'Fehlt in Vorlage' },
   { id: 'adj-09', deckId: 'adjektive', frontText: 'wichtig', backText: 'Durori / Muhumm' },
-  { id: 'adj-10', deckId: 'adjektive', frontText: 'spannend', backText: '???', notes: 'Fehlt in Vorlage' },
   { id: 'adj-11', deckId: 'adjektive', frontText: 'langsam', backText: 'Shimma shimma / Khatsche Khatsche / Hedi hedi' },
   { id: 'adj-12', deckId: 'adjektive', frontText: 'klar', backText: 'Sipja / Spitha (w) / Sipje' },
-  { id: 'adj-13', deckId: 'adjektive', frontText: 'praktisch', backText: '???', notes: 'Fehlt in Vorlage' },
   { id: 'adj-14', deckId: 'adjektive', frontText: 'schön', backText: 'Shiklana (m) / Shiklanta (w) / Shiklane (pl)' },
   { id: 'adj-15', deckId: 'adjektive', frontText: 'toll', backText: 'Taaza / Taaze (w, pl)' },
   { id: 'adj-16', deckId: 'adjektive', frontText: 'schwierig', backText: 'Sahmat' },
@@ -64,7 +61,6 @@ const seedCards: DemoSeedCard[] = [
   { id: 'adj-50', deckId: 'adjektive', frontText: 'nett', backText: 'Spay / Taaza' },
   { id: 'adj-51', deckId: 'adjektive', frontText: 'zufrieden', backText: 'Mapßut' },
   { id: 'adj-52', deckId: 'adjektive', frontText: 'früh', backText: 'Jalde' },
-  { id: 'adj-53', deckId: 'adjektive', frontText: 'spät', backText: '???', notes: 'Fehlt in Vorlage' },
   { id: 'adj-54', deckId: 'adjektive', frontText: 'wenig', backText: 'Shim-ma' },
   { id: 'adj-55', deckId: 'adjektive', frontText: 'viel', backText: 'Raba' },
   { id: 'adj-56', deckId: 'adjektive', frontText: 'sauber', backText: 'Tam-mis' },
@@ -180,7 +176,6 @@ const seedCards: DemoSeedCard[] = [
   { id: 'verb-26', deckId: 'verben', frontText: 'helfen', backText: 'Mayone' },
   { id: 'verb-27', deckId: 'verben', frontText: 'warten', backText: 'Spara' },
   { id: 'verb-28', deckId: 'verben', frontText: 'freuen', backText: 'Khmala' },
-  { id: 'verb-29', deckId: 'verben', frontText: 'decken (Tisch decken)', backText: '???', notes: 'Fehlt in Vorlage' },
   { id: 'verb-30', deckId: 'verben', frontText: 'aufräumen', backText: 'Mqarqose' },
   { id: 'verb-31', deckId: 'verben', frontText: 'werden', backText: 'Pjascha', notes: 'Mit Fragezeichen in Vorlage' },
   { id: 'verb-32', deckId: 'verben', frontText: 'können', backText: 'Msaja' },
@@ -195,8 +190,21 @@ const seedCards: DemoSeedCard[] = [
   { id: 'verb-41', deckId: 'verben', frontText: 'hoffen', backText: 'Baia' },
 ];
 
+function getWordType(deckId: string): WordType {
+  if (deckId === 'nomen') {
+    return 'nouns';
+  }
+
+  if (deckId === 'verben') {
+    return 'verbs';
+  }
+
+  return 'adjectives';
+}
+
 export const demoAssyrianCards: AssyrianCard[] = seedCards.map((card, index) => ({
   ...card,
+  wordType: getWordType(card.deckId),
   spacedRep: {
     interval: 1,
     easeFactor: 2.5,

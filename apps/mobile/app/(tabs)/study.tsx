@@ -7,11 +7,16 @@ import { Button, Dialog, Input, Paragraph, SizableText, TextArea, XStack, YStack
 import { useCardStore } from '../../src/features/cards/store/cardStore';
 import { FlipSwipeCard } from '../../src/features/cards/ui/FlipSwipeCard';
 
+const WORD_TYPES = ['nouns', 'adjectives', 'verbs'] as const;
+
 export default function StudyScreen() {
   const navigation = useNavigation();
   const theme = useTheme();
   const currentIndex = useCardStore((state) => state.currentIndex);
   const cards = useCardStore((state) => state.cards);
+  const selectedWordTypes = useCardStore((state) => state.selectedWordTypes);
+  const toggleWordTypeFilter = useCardStore((state) => state.toggleWordTypeFilter);
+  const reviewedToday = useCardStore((state) => state.reviewedToday);
   const swipeCurrentCard = useCardStore((state) => state.swipeCurrentCard);
   const addCard = useCardStore((state) => state.addCard);
 
@@ -21,14 +26,20 @@ export default function StudyScreen() {
   const [notes, setNotes] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  const currentCard = cards[currentIndex];
+  const filteredCards = useMemo(
+    () => cards.filter((card) => selectedWordTypes.includes(card.wordType)),
+    [cards, selectedWordTypes]
+  );
+  const currentCard = selectedWordTypes.includes(cards[currentIndex]?.wordType ?? 'nouns')
+    ? cards[currentIndex]
+    : filteredCards[0];
   const progress = useMemo(() => {
-    if (cards.length === 0) {
+    if (filteredCards.length === 0) {
       return 0;
     }
 
-    return (currentIndex + 1) / cards.length;
-  }, [cards.length, currentIndex]);
+    return Math.min((reviewedToday % filteredCards.length) / filteredCards.length, 1);
+  }, [filteredCards.length, reviewedToday]);
 
   const progressValue = useSharedValue(0);
 
@@ -62,6 +73,7 @@ export default function StudyScreen() {
     addCard({
       frontText,
       backText,
+      wordType: selectedWordTypes[0] ?? 'nouns',
       notes,
     });
 
@@ -148,6 +160,28 @@ export default function StudyScreen() {
       >
         <YStack gap="$3">
           <YStack gap="$2" borderRadius="$4" padding="$3" borderWidth={1} backgroundColor="$backgroundHover">
+            <Paragraph color="$gray11">
+              Word Type
+            </Paragraph>
+            <XStack gap="$2">
+              {WORD_TYPES.map((wordType) => {
+                const isSelected = selectedWordTypes.includes(wordType);
+
+                return (
+                  <Button
+                    key={wordType}
+                    flex={1}
+                    variant={isSelected ? undefined : 'outlined'}
+                    onPress={() => toggleWordTypeFilter(wordType)}
+                  >
+                    {wordType === 'nouns' ? 'Nouns' : wordType === 'adjectives' ? 'Adjectives' : 'Verbs'}
+                  </Button>
+                );
+              })}
+            </XStack>
+          </YStack>
+
+          <YStack gap="$2" borderRadius="$4" padding="$3" borderWidth={1} backgroundColor="$backgroundHover">
             <XStack justifyContent="space-between">
               <Paragraph color="$gray11">
                 Deck progress
@@ -160,7 +194,9 @@ export default function StudyScreen() {
               <Animated.View style={[{ height: '100%', backgroundColor: theme.blue9.val }, progressStyle]} />
             </YStack>
             <Paragraph color="$gray11">
-              {cards.length > 0 ? `Card ${currentIndex + 1} of ${cards.length}` : 'No cards yet. Add your first card.'}
+              {filteredCards.length > 0
+                ? `${filteredCards.length} cards in ${selectedWordTypes.join(', ')}`
+                : `No cards in selected filters yet.`}
             </Paragraph>
           </YStack>
         </YStack>

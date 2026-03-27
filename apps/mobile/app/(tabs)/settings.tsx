@@ -1,10 +1,12 @@
 import { ScrollView } from 'react-native';
-import { Button, H2, ListItem, Paragraph, SizableText, YStack, useTheme } from 'tamagui';
+import { Button, H2, ListItem, Paragraph, SizableText, XStack, YStack, useTheme } from 'tamagui';
 
 import { useCardStore } from '../../src/features/cards/store/cardStore';
 
 export default function SettingsScreen() {
   const resetSession = useCardStore((state) => state.resetSession);
+  const themePreference = useCardStore((state) => state.themePreference);
+  const setThemePreference = useCardStore((state) => state.setThemePreference);
   const theme = useTheme();
 
   return (
@@ -24,6 +26,35 @@ export default function SettingsScreen() {
               German to Assyrian
             </Paragraph>
           </ListItem>
+        </YStack>
+
+        <YStack gap="$2">
+          <SizableText fontWeight="700">
+            Theme
+          </SizableText>
+          <XStack gap="$2">
+            <Button
+              flex={1}
+              variant={themePreference === 'system' ? undefined : 'outlined'}
+              onPress={() => setThemePreference('system')}
+            >
+              System
+            </Button>
+            <Button
+              flex={1}
+              variant={themePreference === 'light' ? undefined : 'outlined'}
+              onPress={() => setThemePreference('light')}
+            >
+              Light
+            </Button>
+            <Button
+              flex={1}
+              variant={themePreference === 'dark' ? undefined : 'outlined'}
+              onPress={() => setThemePreference('dark')}
+            >
+              Dark
+            </Button>
+          </XStack>
         </YStack>
 
         <Button onPress={resetSession}>

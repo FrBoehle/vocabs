@@ -1,4 +1,5 @@
 export type SwipeOutcome = 'known' | 'review';
+export type WordType = 'nouns' | 'adjectives' | 'verbs';
 
 export type SpacedRepetitionState = {
   interval: number;
@@ -10,6 +11,7 @@ export type SpacedRepetitionState = {
 export type AssyrianCard = {
   id: string;
   deckId: string;
+  wordType: WordType;
   frontText: string;
   backText: string;
   notes?: string;

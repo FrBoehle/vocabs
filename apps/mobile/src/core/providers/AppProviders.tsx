@@ -7,17 +7,16 @@ import {
   NotoSans_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/noto-sans';
-import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TamaguiProvider, Theme } from 'tamagui';
 
 import tamaguiConfig from '../../../tamagui.config';
+import { useAppTheme } from '../theme/useAppTheme';
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
-  const colorScheme = useColorScheme();
-  const themeName = colorScheme === 'dark' ? 'dark' : 'light';
+  const { themeName } = useAppTheme();
   const [fontsLoaded] = useFonts({
     NotoSans_400Regular,
     NotoSans_500Medium,

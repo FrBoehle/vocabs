@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "vocabs",
-    "slug": "vocabs",
+    "slug": "vocabs-shlama-tutor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -40,6 +40,7 @@
       "eas": {
         "projectId": "4afa005d-55b2-4e35-b594-4aa604f8da3a"
       }
-    }
+    },
+    "owner": "fboehle"
   }
 }
